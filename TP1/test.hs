@@ -1,41 +1,47 @@
-3.
+-- 3.
 sommeDeXaY a b = sum [a .. b]
 
-4.
+-- 4.
 somme []     = 0
 somme (x:xs) = x + (somme xs)
 
-5.
-dernier (x:[]) = x
-dernier (x:xs) = dernier xs
-dernier []     = error "liste vide"
+-- 5.
+last' (x:[]) = x
+last' (x:xs) = last' xs
+last' []     = error "liste vide"
 
-6.
-premiers (_:[]) = []
-premiers (x:xs) = x : (premiers xs)
-premiers []     = error "liste vide"
+init' (_:[]) = []
+init' (x:xs) = x : (init' xs)
+init' []     = error "liste vide"
 
-7.
+-- 6.
 (!!!) (x:_) 0  = x
-(!!!) (x:xs) i = xs !!! (i - 1)
+(!!!) (x:xs) n = xs !!! (n - 1)
 (!!!) [] _     = error "liste vide"
 
-(+++) [] []     = []
-(+++) [] (y:[]) = [y]
-(+++) [] (y:ys) = y : [] +++ ys
+(+++) [] ys = ys
 (+++) (x:xs) ys = x : xs +++ ys
 
-concat_l (xs:[])  = xs
-concat_l (xs:xss) = xs +++ concat_l xss
+concat' [] = error "liste vide"
+concat' (xs:[])  = xs
+concat' (xs:xss) = xs +++ concat' xss
 
 my_map fct (x:[]) = fct x : []
 my_map fct (x:xs) = (fct x) : (my_map fct xs)
 
-8.
-my_length l = somme (map (\_ -> 1) l)
+-- 7.
+-- Nous utilisons la curryfication.
+-- C'est a dire que la fontion '(!!)' qui attend deux parametres,
+-- devient la fonction '(!!) l' qui attend un seul parametre.
 
-9.
-my_function f x n = take n (iterate f x)
+-- 8.
+length' l = somme (map (\_ -> 1) l)
 
-10.
-loop n = my_function (+ 1) 1 n
+-- 9.
+function _ x 1 = [x]
+function f x n = x : function f (f x) (n - 1)
+
+function' f x n = take n (iterate f x)
+
+-- 10.
+loop n = function' (+ 1) 0 n
